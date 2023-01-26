@@ -2,13 +2,11 @@
 
 namespace Tests\Feature;
 
-use Faker\Core\Number;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 use App\Models\User;
+
 class ContactTest extends TestCase
 {
     private $faker;
