@@ -49,8 +49,8 @@ class ContactController extends Controller
         }
         $request->validate([
             'name' => 'required|min:5',
-            'contact' => 'required|min:9|max:9|unique:contacts,contact',
-            'email' => 'required|email|unique:contacts,email'
+            'contact' => 'required|min:9|max:9|unique:contacts,contact,NULL,id,deleted_at,NULL',
+            'email' => 'required|email|unique:contacts,email,NULL,id,deleted_at,NULL'
         ]);
 
         Contact::create($request->all());
@@ -102,8 +102,8 @@ class ContactController extends Controller
 
         $request->validate([
             'name' => 'required|min:5',
-            'contact' => 'required|min:9|max:9|unique:contacts,contact',
-            'email' => 'unique:users,email,'.$contact->id
+            'contact' => 'required|min:9|max:9|unique:contacts,contact,'.$contact->id.',id,deleted_at,NULL',
+            'email' => 'unique:users,email,'.$contact->id.',id,deleted_at,NULL'
         ]);
 
         $contact->update($request->all());
