@@ -48,8 +48,8 @@ class ContactController extends Controller
             return $verifyAuth;
         }
         $request->validate([
-            'name' => 'required',
-            'contact' => 'required|max:9|unique:contacts,contact',
+            'name' => 'required|min:5',
+            'contact' => 'required|min:9|max:9|unique:contacts,contact',
             'email' => 'required|email|unique:contacts,email'
         ]);
 
@@ -101,8 +101,8 @@ class ContactController extends Controller
         }
 
         $request->validate([
-            'name' => 'required',
-            'contact' => 'required|max:9',
+            'name' => 'required|min:5',
+            'contact' => 'required|min:9|max:9|unique:contacts,contact',
             'email' => 'unique:users,email,'.$contact->id
         ]);
 
