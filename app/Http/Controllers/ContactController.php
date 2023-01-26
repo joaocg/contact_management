@@ -28,7 +28,11 @@ class ContactController extends Controller
      */
     public function create()
     {
-        $this->checkPermissionAcess();
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof RedirectResponse){
+            return $verifyAuth;
+        }
+
         return view('contacts.create');
     }
 
