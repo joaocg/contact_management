@@ -14,7 +14,8 @@ class AlterContactTable extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->dropUnique(['contact', 'email']);
+            $table->dropUnique('contact');
+            $table->dropUnique('email');
         });
     }
 
