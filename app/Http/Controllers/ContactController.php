@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class ContactController extends Controller
 {
 
     /**
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -22,19 +24,25 @@ class ContactController extends Controller
 
 
     /**
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
+        $this->checkPermissionAcess();
         return view('contacts.create');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
+
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof RedirectResponse){
+            return $verifyAuth;
+        }
         $request->validate([
             'name' => 'required',
             'contact' => 'required|max:9|unique:contacts,contact',
@@ -50,30 +58,44 @@ class ContactController extends Controller
 
     /**
      * @param Contact $contact
-     * \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Contact $contact)
     {
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof RedirectResponse){
+            return $verifyAuth;
+        }
         return view('contacts.show',compact('contact'));
     }
 
 
     /**
      * @param Contact $contact
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Contact $contact)
     {
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof \Illuminate\Http\RedirectResponse){
+            return $verifyAuth;
+        }
+
         return view('contacts.edit',compact('contact'));
     }
 
     /**
      * @param Request $request
      * @param Contact $contact
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Request $request, Contact $contact)
     {
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof RedirectResponse){
+            return $verifyAuth;
+        }
+
         $request->validate([
             'name' => 'required',
             'contact' => 'required|max:9',
@@ -88,13 +110,32 @@ class ContactController extends Controller
 
     /**
      * @param Contact $contact
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Contact $contact)
     {
+        $verifyAuth = $this->loadAuthChecker();;
+        if($verifyAuth instanceof RedirectResponse){
+            return $verifyAuth;
+        }
+
         $contact->delete();
 
         return redirect()->route('contacts.index')
             ->with('success','Contact deleted successfully');
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    private function loadAuthChecker(){
+
+        if(Auth::check() === false)
+        {
+            return redirect()->route('contacts.index')
+                ->with('error','Not permission!');
+        }
+
+        return true;
     }
 }
